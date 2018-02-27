@@ -1,0 +1,26 @@
+{
+  "name": "mobile-perf-portfolio",
+  "version": "1.0.0",
+  "description": "Optimizing critical rendering path and other performance issues.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guti7/mobile-portfolio.git"
+  },
+  "keywords": [
+    "PERF",
+    "website",
+    "performance",
+    "optimizaiton",
+    "portfolio",
+    "project",
+    "speed",
+    "challenge",
+    "CRP"
+  ],
+  "author": "guti7",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guti7/mobile-portfolio/issues"
+  },
+  "homepage": "https://github.com/guti7/mobile-portfolio#readme"
+}
