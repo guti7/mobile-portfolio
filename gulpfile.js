@@ -5,8 +5,23 @@ var gulp        = require('gulp'),
     del         = require('del'),
     cssnano     = require('gulp-cssnano'),
     uglify      = require('gulp-uglify'),
-    htmlmin     = require('gulp-htmlmin')
+    htmlmin     = require('gulp-htmlmin'),
     reload      = browserSync.reload;
+
+// const server = browserSync.create();
+// function reload(done) {
+//   server.reload();
+//   done();
+// }
+// function serve(done) {
+//   server.init({
+//     server: {
+//       baseDir: './'
+//     }
+//   });
+//   done();
+// }
+// const watch = () => gulp.watch(paths.styles.src, paths.scripts.src, paths.html.src, gulp.series('styles', 'scripts', 'html', reload));
 
 var paths = {
   styles: {
@@ -15,22 +30,24 @@ var paths = {
   },
   scripts: {
     src: ['src/js/**/*.js'],
-    dest: 'build/dist/js'
+    dest: 'build/dist/js/'
   },
   html: {
     src: ['src/*.html'],
-    dest: './'
+    dest: 'build/dist/'
   },
   images: {
     src: ['src/img/**/*', 'src/views/images/**/*'],
-    dest: 'build/dist/images'
+    dest: 'build/dist/images/'
   }
 }
 
 gulp.task('watch', function() {
-  gulp.watch(paths.styles.src, gulp.parallel('styles'));
-  gulp.watch(paths.scripts.src, gulp.parallel('scripts'));
-  gulp.watch(paths.html.src, gulp.parallel('minify'));
+  gulp.watch(paths.styles.src, gulp.series('styles', reload));
+  gulp.watch(paths.scripts.src, gulp.series('scripts', reload));
+  gulp.watch(paths.html.src, gulp.series('minify', reload));
+  gulp.watch(paths.images.src, gulp.series('imagemin', reload));
+  // gulp.watch(paths.styles.src, paths.scripts.src, paths.html.src, paths.images.src, gulp.series('styles', 'scripts', 'minify', 'imagemin', reload));
 });
 
 gulp.task('minify', function() {
@@ -72,11 +89,11 @@ gulp.task('imagemin', function() {
 gulp.task('serve', function() {
   browserSync({
     server: {
-      baseDir: './'
+      baseDir: './build/dist/'
     },
     browser: "google chrome"
   })
-  gulp.watch(['index.html', 'css/**/*.css', 'js/**/*.js'], {cwd: './'}, reload);
+  gulp.watch(['index.html', 'css/**/*.css', 'js/**/*.js', 'images/**/*']);  // {cwd: './'}
 });
 
 gulp.task('default', defaultTask());
@@ -84,3 +101,5 @@ gulp.task('default', defaultTask());
 function defaultTask() {
   return gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve', 'watch'));
 }
+
+// var defaultTast = gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve', 'watch'));
