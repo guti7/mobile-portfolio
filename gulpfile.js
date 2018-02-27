@@ -1,19 +1,24 @@
 var gulp        = require('gulp'),
     browserSync = require('browser-sync'),
     imagemin    = require('gulp-imagemin'),
+    cache       = require('gulp-cache'),
     del         = require('del'),
     reload      = browserSync.reload;
 
-gulp.task('clean', function(){
+gulp.task('clean', function() {
   return del(['build/dist/images/']);
+});
+
+gulp.task('clear', function() {
+  return cache.clearAll()
 });
 
 gulp.task('imagemin', function() {
   return gulp.src(['img/**/*', 'views/images/**/*']) // 'views/images/**/*.{png, jpg}'
-        .pipe(imagemin([
+        .pipe(cache(imagemin([
           imagemin.optipng({ optimizationLevel: 5 }),
           imagemin.jpegtran({ progressive: true })
-        ]))
+        ])))
         .pipe(gulp.dest('build/dist/images'))
 });
 
