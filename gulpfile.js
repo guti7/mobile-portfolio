@@ -3,10 +3,18 @@ var gulp        = require('gulp'),
     imagemin    = require('gulp-imagemin'),
     cache       = require('gulp-cache'),
     del         = require('del'),
+    cssnano     = require('gulp-cssnano'),
     reload      = browserSync.reload;
 
+
+gulp.task('css', function() {
+  return gulp.src(['css/**/*.css'])
+         .pipe(cssnano())
+         .pipe(gulp.dest('build/dist/styles/'));
+});
+
 gulp.task('clean', function() {
-  return del(['build/dist/images/']);
+  return del(['build/dist/images/', 'build/dist/styles/']);
 });
 
 gulp.task('clear', function() {
