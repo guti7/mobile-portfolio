@@ -4,17 +4,24 @@ var gulp        = require('gulp'),
     cache       = require('gulp-cache'),
     del         = require('del'),
     cssnano     = require('gulp-cssnano'),
+    uglify      = require('gulp-uglify'),
     reload      = browserSync.reload;
 
 
-gulp.task('css', function() {
+gulp.task('scripts', function() {
+  return gulp.src(['js/*'])
+         .pipe(uglify())
+         .pipe(gulp.dest('build/dist/scripts'));
+});
+
+gulp.task('styles', function() {
   return gulp.src(['css/**/*.css'])
          .pipe(cssnano())
          .pipe(gulp.dest('build/dist/styles/'));
 });
 
 gulp.task('clean', function() {
-  return del(['build/dist/images/', 'build/dist/styles/']);
+  return del(['build/dist/*', '!build/dist/']);
 });
 
 gulp.task('clear', function() {
@@ -41,9 +48,8 @@ gulp.task('serve', function() {
   gulp.watch(['index.html', 'css/**/*.css', 'js/**/*.js'], {cwd: './'}, reload);
 });
 
-gulp.task('default', defaultTask);
+gulp.task('default', defaultTask());
 
-function defaultTask(done) {
-  // Perform something
-  done();
+function defaultTask() {
+  return gulp.series('clean', gulp.parallel('scripts', 'styles', 'imagemin', 'serve'));
 }
