@@ -19,13 +19,12 @@
   ],
   "author": "guti7",
   "license": "MIT",
-
   "bugs": {
     "url": "https://github.com/guti7/mobile-portfolio/issues"
   },
   "homepage": "https://github.com/guti7/mobile-portfolio#readme",
-
   "devDependencies": {
+    "browser-sync": "^2.23.6",
     "gulp": "^4.0.0"
   }
 }
