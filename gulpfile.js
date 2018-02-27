@@ -8,21 +8,6 @@ var gulp        = require('gulp'),
     htmlmin     = require('gulp-htmlmin'),
     reload      = browserSync.reload;
 
-// const server = browserSync.create();
-// function reload(done) {
-//   server.reload();
-//   done();
-// }
-// function serve(done) {
-//   server.init({
-//     server: {
-//       baseDir: './'
-//     }
-//   });
-//   done();
-// }
-// const watch = () => gulp.watch(paths.styles.src, paths.scripts.src, paths.html.src, gulp.series('styles', 'scripts', 'html', reload));
-
 var paths = {
   styles: {
     src: ['src/css/**/*.css'],
@@ -43,11 +28,10 @@ var paths = {
 }
 
 gulp.task('watch', function() {
-  gulp.watch(paths.styles.src, gulp.series('styles', reload));
-  gulp.watch(paths.scripts.src, gulp.series('scripts', reload));
-  gulp.watch(paths.html.src, gulp.series('minify', reload));
-  gulp.watch(paths.images.src, gulp.series('imagemin', reload));
-  // gulp.watch(paths.styles.src, paths.scripts.src, paths.html.src, paths.images.src, gulp.series('styles', 'scripts', 'minify', 'imagemin', reload));
+  gulp.watch(paths.styles.src, gulp.series('styles'));
+  gulp.watch(paths.scripts.src, gulp.series('scripts'));
+  gulp.watch(paths.html.src, gulp.series('minify'));
+  gulp.watch(paths.images.src, gulp.series('imagemin'));
 });
 
 gulp.task('minify', function() {
@@ -99,7 +83,5 @@ gulp.task('serve', function() {
 gulp.task('default', defaultTask());
 
 function defaultTask() {
-  return gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve', 'watch'));
+  return gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'watch'));
 }
-
-// var defaultTast = gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve', 'watch'));
