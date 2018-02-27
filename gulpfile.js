@@ -27,6 +27,12 @@ var paths = {
   }
 }
 
+gulp.task('watch', function() {
+  gulp.watch(paths.styles.src, gulp.parallel('styles'));
+  gulp.watch(paths.scripts.src, gulp.parallel('scripts'));
+  gulp.watch(paths.html.src, gulp.parallel('minify'));
+});
+
 gulp.task('minify', function() {
   return gulp.src(paths.html.src)
          .pipe(htmlmin({collapseWhitespace : true}))
@@ -76,5 +82,5 @@ gulp.task('serve', function() {
 gulp.task('default', defaultTask());
 
 function defaultTask() {
-  return gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve'));
+  return gulp.series('clean', 'clear', gulp.parallel('scripts', 'styles', 'imagemin', 'minify', 'serve', 'watch'));
 }
