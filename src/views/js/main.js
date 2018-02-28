@@ -399,55 +399,44 @@ var pizzaElementGenerator = function(i) {
   return pizzaContainer;
 };
 
+// User Timing API function
+window.performance.mark("mark_start_resize");
+
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
-  window.performance.mark("mark_start_resize");   // User Timing API function
+  var pizzaSizeIdContent = document.querySelector("#pizzaSize").innerHTML;
+  var newPizzaWidth;
 
-  // Changes the value for the size of the pizza above the slider
-  function changeSliderLabel(size) {
+  // Changes the ui for the size of the pizza and the slider label
+  function updateSliderUI(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        pizzaSizeIdContent = "Small";
+        newPizzaWidth = "25%";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        pizzaSizeIdContent = "Medium";
+        newPizzaWidth = "33.33%";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        pizzSizeIdContent = "Large";
+        newPizzaWidth = "50%";
         return;
       default:
-        console.error("bug in changeSliderLabel");
-    }
-  }
-
-  changeSliderLabel(size);
-
-  function determineNewWidth(size) {
-    function sizeSwitcher (size) {
-      switch(size) {
-        case "1":
-          return "25%";
-        case "2":
-          return "33.33%";
-        case "3":
-          return "50%";
-        default:
-          console.log("bug in sizeSwitcher");
-      }
+        console.error("bug in UI change by slider");
     }
   }
 
   // Iterates through pizza elements on the page and changes their widths
+  var pizzas = document.querySelectorAll(".randomPizzaContainer");
   function changePizzaSizes(size) {
-    var pizzas = document.querySelectorAll(".randomPizzaContainer");
-
-    var newWidth = determineNewWidth(size);
 
     for (var i = 0; i < pizzas.length; i++) {
-      pizzas[i].style.width = newWidth;
+      pizzas[i].style.width = newPizzaWidth;
     }
   }
 
+  updateSliderUI(size);
   changePizzaSizes(size);
 
   // User Timing API is awesome
@@ -515,9 +504,6 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-window.addEventListener('resize', updateMovingPizzas);
-
-
 var movingPizzasContainer = document.querySelector('#movingPizzas1');
 function updateMovingPizzas() {
   var movingPizzas = document.querySelectorAll('.mover');
@@ -552,3 +538,4 @@ function updateMovingPizzas() {
 document.addEventListener('DOMContentLoaded', function() {
   updateMovingPizzas();
 });
+window.addEventListener('resize', updateMovingPizzas);
