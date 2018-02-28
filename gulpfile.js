@@ -10,20 +10,20 @@ var gulp        = require('gulp'),
 
 var paths = {
   styles: {
-    src: ['src/css/**/*.css'],
-    dest: 'build/dist/css/'
+    src: ['src/**/*.css'],
+    dest: 'dist/'
   },
   scripts: {
-    src: ['src/js/**/*.js'],
-    dest: 'build/dist/js/'
+    src: ['src/**/*.js'],
+    dest: 'dist/'
   },
   html: {
-    src: ['src/*.html'],
-    dest: 'build/dist/'
+    src: ['src/**/*.html'],
+    dest: 'dist/'
   },
   images: {
-    src: ['src/img/**/*', 'src/views/images/**/*'],
-    dest: 'build/dist/images/'
+    src: ['src/**/*.{jpg,png,gif}'],
+    dest: 'dist/'
   }
 }
 
@@ -53,7 +53,7 @@ gulp.task('styles', function() {
 });
 
 gulp.task('clean', function() {
-  return del(['build/dist/*', '!build/dist/']);
+  return del(['dist/*', '!dist/']);
 });
 
 gulp.task('clear', function() {
@@ -73,7 +73,7 @@ gulp.task('imagemin', function() {
 gulp.task('serve', function() {
   browserSync({
     server: {
-      baseDir: './build/dist/'
+      baseDir: './dist/'
     },
     browser: "google chrome"
   })
