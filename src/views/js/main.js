@@ -403,27 +403,26 @@ var pizzaElementGenerator = function(i) {
 window.performance.mark("mark_start_resize");
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
-// var pizzaSizeLabel = document.querySelector("#pizzaSize").innerHTML;
-// var pizzas = document.querySelectorAll(".randomPizzaContainer");
+var pizzas = document.getElementsByClassName('randomPizzaContainer');
 
 var resizePizzas = function(size) {
-  var pizzaSizeLabel = document.querySelector("#pizzaSize").innerHTML;
-  var pizzas = document.querySelectorAll(".randomPizzaContainer");
+  var pizzasCount = pizzas.length
+  var pizzaSize;
   var newPizzaWidth;
 
   // Gets the new ui values for the size of the pizza and the slider label
-  function updateSliderUI(size) {
+  function getNewPizzaSize(size) {
     switch(size) {
       case "1":
-        pizzaSizeLabel = "Small";
+        pizzaSize = "Small";
         newPizzaWidth = "25%";
         return;
       case "2":
-        pizzaSizeLabel = "Medium";
+        pizzaSize = "Medium";
         newPizzaWidth = "33.33%";
         return;
       case "3":
-        pizzaSizeLabel = "Large";
+        pizzaSize = "Large";
         newPizzaWidth = "50%";
         return;
       default:
@@ -433,14 +432,14 @@ var resizePizzas = function(size) {
 
   // Update all the pizzas new width
   function updatePizzaSizes(size) {
-    // updateSliderUI(size);
-    for (var i = 0; i < pizzas.length; i++) {
-      pizzas[i].style.width = newPizzaWidth;
+    for (var i = 0; i < pizzasCount; i++) {
+      pizzas[i].style.width = size;
     }
   }
 
-  updateSliderUI(size);
-  updatePizzaSizes(size);
+  getNewPizzaSize(size);
+  updatePizzaSizes(newPizzaWidth);
+  document.getElementById('pizzaSize').innerHTML = pizzaSize;
 
   // User Timing API is awesome
   window.performance.mark("mark_end_resize");
@@ -452,8 +451,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 90; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
+var pizzasDiv = document.getElementById("randomPizzas");
+for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -481,15 +480,17 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+var items = document.getElementsByClassName('mover');
+
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
   // document.body.scrollTop is no longer supported in Chrome.
   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
-  for (var i = 0; i < items.length; i++) {
+  var itemsLength = items.length
+  for (var i = 0; i < itemsLength; i++) {
     var phase = Math.sin((scrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
@@ -504,16 +505,12 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
-
-var movingPizzasContainer = document.querySelector('#movingPizzas1');
-function updateMovingPizzas() {
-  var movingPizzas = document.querySelectorAll('.mover');
-  if (movingPizzas) {
-    var length = movingPizzas.length
-    for (var i = 0; i < length; i++) {
-      movingPizzas[i].remove();
+// var movingPizzasContainer = document.querySelector('#movingPizzas1');
+var movingPizzasContainer = document.getElementById('movingPizzas1')
+function updateMovingPizzasGrid() {
+  if (items) {
+    while (movingPizzasContainer.firstChild) {
+      movingPizzasContainer.removeChild(movingPizzasContainer.firstChild);
     }
   }
 
@@ -539,6 +536,9 @@ function updateMovingPizzas() {
 }
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-  updateMovingPizzas();
+  updateMovingPizzasGrid();
 });
-window.addEventListener('resize', updateMovingPizzas);
+// Recalculates the moving pizzas on window resize
+window.addEventListener('resize', updateMovingPizzasGrid);
+// Runs updatePositions on scroll
+window.addEventListener('scroll', updatePositions);
